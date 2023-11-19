@@ -1,0 +1,49 @@
+.parent{
+margin : 0;
+padding : 0;
+}
+
+.navbar{
+    box-shadow: 0px 4px 15px 0px #00000026;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.nav_btns{
+    display: flex;
+    width : 25vw;
+    justify-content: space-evenly;
+}
+.title {
+    width: 10vw;
+    color: black;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.register_btn button{
+   background-color: #FF7373;
+   width: 10vw;
+   cursor: pointer;
+}
+.signin_btn button{
+    background-color: #73ABFF;
+    width: 10vw;
+    cursor: pointer;
+}
+
+.images{
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+
+.all h2{
+    position: absolute;
+    top: 22%;
+    left: 14%;
+    color: white;
+}
