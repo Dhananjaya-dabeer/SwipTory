@@ -2,6 +2,9 @@
 margin : 0;
 padding : 0;
 }
+.blurBack{
+    background-color: #787373;
+}
 
 .navbar{
     box-shadow: 0px 4px 15px 0px #00000026;
@@ -37,13 +40,158 @@ padding : 0;
 .images{
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
+    margin-top: 2%;
+    margin-left: 3%;
 
 }
-
+.images img{
+    width: 60%;
+    height: 20vh;
+    cursor: pointer;
+    border-radius: 40px;
+    object-fit: cover;
+    
+}
+.images img:hover{
+    border: 4px solid #00ACD2;
+}
+.images div{
+    width: 20vw;
+    height: 20vh;
+}
 
 .all h2{
     position: absolute;
-    top: 22%;
-    left: 14%;
+    top: 20%;
+    left: 6.5%;
     color: white;
+}
+.food h2{
+    position: absolute;
+    top: 20%;
+    left: 22%;
+    color: white;
+}
+.health h2{
+    position: absolute;
+    top: 18%;
+    left: 37%;
+    color: white;
+}
+.travel h2{
+    position: absolute;
+    top: 20%;
+    left: 53.5%;
+    color: white;
+}
+.movie h2{
+    position: absolute;
+    top: 20%;
+    left: 70%;
+    color: white;
+}
+.education h2{
+    position: absolute;
+    top: 20%;
+    left: 84.3%;
+    color: white;
+}
+
+.storyContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.storyContainer h2{
+    color: black;
+}
+.storyContainer h3{
+    color: #8E8E8E;
+}
+
+.storyContainer div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around ;
+    height: 35vh;
+    text-align: center;
+}
+
+.registerpopup{
+    width : 35vw;
+    height: 40vh;
+    position: absolute;
+    top: 25%;
+    left: 31%;
+    box-shadow: 0px 4px 30px 0px #FFFFFF40;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+   
+}
+.signinpopup{
+    width : 35vw;
+    height: 40vh;
+    position: absolute;
+    top: 25%;
+    left: 31%;
+    box-shadow: 0px 4px 30px 0px #FFFFFF40;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.registerpopup h3{
+    text-align: center  ;
+}
+.signinpopup h3{
+    text-align: center  ;
+}
+
+.username_field label{
+    color: black;
+    font-weight: 700;
+}
+.password_field label{
+    color: black;
+    font-weight: 700;
+}
+
+.username_field{
+    display: flex;
+    justify-content: space-evenly;
+}
+.password_field{
+    display: flex;
+    justify-content: space-evenly;
+}
+.register_popup_btn button{
+    background-color: #00ACD2;
+}
+
+.register_popup_btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.displaynone{
+    display: none;
+}
+.show_hide_password{
+    text-align: center;
+}
+
+.crosslogo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.crosslogo span{
+    margin-right: 2%;
+    cursor: pointer;
 }
