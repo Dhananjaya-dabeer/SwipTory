@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./HomePage.module.css";
 import { useState } from "react";
 import axios from "axios"
+import { useNavigate} from "react-router-dom";
+import { getItemLocalStorage, setItemLocalStorage } from "../../../../server/src/utils/ExportUtils";
 
 function HomePage() {
   let ALL_IMG =
@@ -20,10 +22,20 @@ function HomePage() {
   const [registerPopUp, setRegisterPopUp] = useState(false);
   const [signInPopUp, setSignInPopup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [jwt, setJwt] = useState("")
   const [userDetails, setUserDetails] = useState({
     username: "",
     password: ""
   })
+  const navigate = useNavigate()
+  const accessToken = getItemLocalStorage("token")
+  if(accessToken) navigate("/signin")
+
+  useEffect(() => {
+    const userLoggedIn = getItemLocalStorage("token")
+    userLoggedIn && navigate("/signin")
+  }, [])
+
   const regsterHandler = () => {
     setRegisterPopUp(!registerPopUp);
     setSignInPopup(false)
@@ -50,11 +62,28 @@ function HomePage() {
      let register = await axios.post(" http://localhost:7000/api/v1/users/register",userDetails)
       try {
         window.alert(register.data.status)
-        
+        setItemLocalStorage("token", register.data.message)
+        if(register.data.token) navigate("/signin")
       } catch (error) {
         console.log(error)
       }
   }
+
+  const signinHandler = async() => {
+    let signin = await axios.post("http://localhost:7000/api/v1/users/signin",userDetails)
+    try {
+     
+      window.alert(signin.data.message)
+      if(signin.data.status == "success") {
+      setItemLocalStorage("token", signin.data.token)
+      if(signin.data.token) navigate("/signin")
+      
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   return (
     <div className={registerPopUp || signInPopUp ? Home.blurBack : Home.parent} onClick={() => {setRegisterPopUp(false);  setSignInPopup(false)}}>
       <div className={Home.navbar} >
@@ -156,18 +185,18 @@ function HomePage() {
         </div>
         <div className={Home.username_field}>
           <label htmlFor="username-L">Username</label>
-          <input id="username-L" type="text" />
+          <input id="username-L" type="text" onChange={(e) => setUserDetails({...userDetails, username: e.target.value})} />
         </div>
         <div className={Home.password_field}>
           <label htmlFor="password-L">Password</label>
-          <input id="password-L" type={showPassword ? "text" : "password"} />
+          <input id="password-L" type={showPassword ? "text" : "password"} onChange={(e) => setUserDetails({...userDetails, password: e.target.value})} />
         </div>
         <div className={Home.show_hide_password}>
           <input id="checkbox" type="checkbox" onClick={HandleShowPassword} />
           <label htmlFor="checkbox">Show Password</label>
         </div>
         <div className={Home.register_popup_btn}>
-          <button>Sign In</button>
+          <button onClick={signinHandler}>Sign In</button>
         </div>
       </div>
     </div>
