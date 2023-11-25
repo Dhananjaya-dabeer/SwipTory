@@ -8,12 +8,13 @@ export const verifyToken =  (req, res, next) => {
         return res.json({status: "You are not Authorized!"})
     }
     try {
-        const verifiedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const verifiedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         req.verificationToken = verifiedToken
         next()
+        res.json({status: "User verified"})
     } catch (error) {
         return res.json({
-            message: "token expired or invalid"
+            status: "token expired or invalid",error
         })
     }
 }

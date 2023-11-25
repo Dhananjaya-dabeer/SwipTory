@@ -1,0 +1,173 @@
+.parent{
+    margin : 0;
+    padding : 0;
+    }
+    .blurBack{
+        background-color: #787373;
+    }
+    
+    .navbar{
+        box-shadow: 0px 4px 15px 0px #00000026;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    
+    }
+
+    .displaynone{
+        display: none;
+    }
+    
+    .nav_btns{
+        display: flex;
+        width : 30vw;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .title {
+        width: 10vw;
+        color: black;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .register_btn button{
+       background-color: #FF7373;
+       width: 10vw;
+       cursor: pointer;
+       display: flex;
+    }
+    .register_btn img{
+        width: 20%;
+        height: 20%;
+    }
+    .signin_btn button{
+        background-color: #FF7373;
+        width: 10vw;
+        cursor: pointer;
+    }
+    .btns{
+        width: 120vw;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .images{
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        margin-top: 2%;
+        margin-left: 3%;
+    
+    }
+    .images img{
+        width: 60%;
+        height: 20vh;
+        cursor: pointer;
+        border-radius: 40px;
+        object-fit: cover;
+        
+    }
+    .images img:hover{
+        border: 4px solid #00ACD2;
+    }
+    .images div{
+        width: 20vw;
+        height: 20vh;
+    }
+    
+    .all h2{
+        position: absolute;
+        top: 20%;
+        left: 6.5%;
+        color: white;
+    }
+    .food h2{
+        position: absolute;
+        top: 20%;
+        left: 22%;
+        color: white;
+    }
+    .health h2{
+        position: absolute;
+        top: 18%;
+        left: 37%;
+        color: white;
+    }
+    .travel h2{
+        position: absolute;
+        top: 20%;
+        left: 53.5%;
+        color: white;
+    }
+    .movie h2{
+        position: absolute;
+        top: 20%;
+        left: 70%;
+        color: white;
+    }
+    .education h2{
+        position: absolute;
+        top: 20%;
+        left: 84.3%;
+        color: white;
+    }
+    
+    .storyContainer{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .storyContainer h2{
+        color: black;
+    }
+    .storyContainer h3{
+        color: #8E8E8E;
+    }
+    
+    .storyContainer div{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around ;
+        height: 35vh;
+        text-align: center;
+    }
+    
+
+    .hamburgur{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .hamburgur img{
+        width: 40%;
+        height: 20%;
+        cursor: pointer;
+    }
+
+    .hamburgerpopupdiv{
+        z-index: 2;
+       position: absolute;
+        width: 20vw;
+        height: 20vh;
+        right: 0;
+        background-color: white;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+    }
+
+    .username{
+        font-weight: 700;
+        font-size: large;
+        text-align: center;
+    }
+    .logout_btn {
+        display: flex;
+        justify-content: center;
+    }
+    .logout_btn button{
+        background-color:#FF7373;
+        color: white;
+        font-weight: 500;
+    }

@@ -14,6 +14,12 @@ export { health }
 const register = asyncHandler(async (req, res) => {
     const { username, password } = req.body
     if (!(username && password)) return res.json({ status: "provide username and password" })
+    const dupkeyVerification = registerModel.findOne({username})
+if(dupkeyVerification){
+    res.json({
+        status: "Username is alredy used please try to use different!"
+    })
+}
     const newUser = await registerModel.create({ username, password })
     const accessToken = newUser.generateAccessToken()
     res.status(200).json({
@@ -24,6 +30,8 @@ const register = asyncHandler(async (req, res) => {
 })
 
 export { register }
+
+
 
 const signin = asyncHandler(async (req, res) => {
     const { username, password } = req.body
@@ -39,7 +47,7 @@ const signin = asyncHandler(async (req, res) => {
     }
     else if (await existingUser.isPasswordCorrect(password)) {
 
-        res.status(200).json({ status: "success", message: `Logged In successfully! welcome ${existingUser.username}`, token: accessToken })
+        res.status(200).json({ status: "success", message: `Logged In successfully! welcome ${existingUser.username}`, token: accessToken, username: existingUser.username })
     }
     else {
         res.json({

@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Home from "./HomePage.module.css";
 import { useState } from "react";
-import axios from "axios"
-import { useNavigate} from "react-router-dom";
-import { getItemLocalStorage, setItemLocalStorage } from "../../../../server/src/utils/ExportUtils";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {
+  getItemLocalStorage,
+  setItemLocalStorage,
+} from "../../../../server/src/utils/ExportUtils";
 
 function HomePage() {
   let ALL_IMG =
@@ -22,27 +25,47 @@ function HomePage() {
   const [registerPopUp, setRegisterPopUp] = useState(false);
   const [signInPopUp, setSignInPopup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [jwt, setJwt] = useState("")
+  const [jwt, setJwt] = useState(false);
+
   const [userDetails, setUserDetails] = useState({
     username: "",
-    password: ""
-  })
-  const navigate = useNavigate()
-  const accessToken = getItemLocalStorage("token")
-  if(accessToken) navigate("/signin")
+    password: "",
+  });
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const userLoggedIn = getItemLocalStorage("token")
-    userLoggedIn && navigate("/signin")
-  }, [])
+    (async () => {
+      try {
+        let userLoggedIn = await axios.get(
+          "http://localhost:7000/api/v1/users/tokenverify",
+          {
+            headers: {
+              Authorization: `${getItemLocalStorage("token")}`,
+            },
+          }
+        );
+        if (userLoggedIn.data.status == "User verified") {
+          setJwt(true);
+          navigate("/signin");
+        } else {
+          setJwt(false);
+          navigate("/");
+        }
+      } catch (error) {
+        setJwt(false);
+      }
+    })();
 
+
+  }, [navigate]);
   const regsterHandler = () => {
     setRegisterPopUp(!registerPopUp);
-    setSignInPopup(false)
+    setSignInPopup(false);
   };
   const signInPopUpHandler = () => {
     setSignInPopup(!signInPopUp);
-    setRegisterPopUp(false)
+    setRegisterPopUp(false);
   };
 
   const HandleShowPassword = () => {
@@ -50,7 +73,6 @@ function HomePage() {
   };
 
   const registerPopUpHandler = () => {
-   
     setRegisterPopUp(!registerPopUp);
   };
 
@@ -58,40 +80,54 @@ function HomePage() {
     setSignInPopup(!signInPopUp);
   };
 
-  const registerHandler = async() => {
-     let register = await axios.post(" http://localhost:7000/api/v1/users/register",userDetails)
-      try {
-        window.alert(register.data.status)
-        setItemLocalStorage("token", register.data.message)
-        if(register.data.token) navigate("/signin")
-      } catch (error) {
-        console.log(error)
-      }
-  }
-
-  const signinHandler = async() => {
-    let signin = await axios.post("http://localhost:7000/api/v1/users/signin",userDetails)
+  const registerHandler = async () => {
+    let register = await axios.post(
+      " http://localhost:7000/api/v1/users/register",
+      userDetails
+    );
     try {
-     
-      window.alert(signin.data.message)
-      if(signin.data.status == "success") {
-      setItemLocalStorage("token", signin.data.token)
-      if(signin.data.token) navigate("/signin")
-      
+      window.alert(register.data.status);
+      setItemLocalStorage("token", register.data.token);
+      if (register.data.token) navigate("/signin");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const signinHandler = async () => {
+    let signin = await axios.post(
+      "http://localhost:7000/api/v1/users/signin",
+      userDetails
+    );
+    try {
+      window.alert(signin.data.message);
+      if (signin.data.status == "success") {
+        setItemLocalStorage("token", signin.data.token);
+        setItemLocalStorage("username", signin.data.username)
+        if (signin.data.token) navigate("/signin");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-  
+  };
+
   return (
-    <div className={registerPopUp || signInPopUp ? Home.blurBack : Home.parent} onClick={() => {setRegisterPopUp(false);  setSignInPopup(false)}}>
-      <div className={Home.navbar} >
+    <div
+      className={registerPopUp || signInPopUp ? Home.blurBack : Home.parent}
+      onClick={() => {
+        setRegisterPopUp(false);
+        setSignInPopup(false);
+      }}
+    >
+      <div className={Home.navbar}>
         <div className={Home.title}>
           <h2>SwipTory</h2>
         </div>
         <div className={Home.nav_btns}>
-          <div className={Home.register_btn} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={Home.register_btn}
+            onClick={(e) => e.stopPropagation()}
+          >
             <button onClick={regsterHandler}>Register Now</button>
           </div>
           <div className={Home.signin_btn} onClick={(e) => e.stopPropagation()}>
@@ -153,7 +189,10 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className={registerPopUp ? Home.registerpopup : Home.displaynone} onClick={(event) =>  event.stopPropagation()}>
+      <div
+        className={registerPopUp ? Home.registerpopup : Home.displaynone}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className={Home.crosslogo}>
           <span onClick={registerPopUpHandler}>&#10060;</span>
         </div>
@@ -162,11 +201,23 @@ function HomePage() {
         </div>
         <div className={Home.username_field}>
           <label htmlFor="username">Username</label>
-          <input id="username" type="text" onChange={(e) => setUserDetails({...userDetails, username: e.target.value}) }/>
+          <input
+            id="username"
+            type="text"
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, username: e.target.value })
+            }
+          />
         </div>
         <div className={Home.password_field}>
           <label htmlFor="password">Password</label>
-          <input id="password" type={showPassword ? "text" : "password"} onChange={(e) => setUserDetails({...userDetails, password: e.target.value})} />
+          <input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, password: e.target.value })
+            }
+          />
         </div>
         <div className={Home.show_hide_password}>
           <input id="checkbox" type="checkbox" onClick={HandleShowPassword} />
@@ -176,7 +227,10 @@ function HomePage() {
           <button onClick={registerHandler}>Register</button>
         </div>
       </div>
-      <div className={signInPopUp ? Home.signinpopup : Home.displaynone} onClick={(event) =>  event.stopPropagation()}>
+      <div
+        className={signInPopUp ? Home.signinpopup : Home.displaynone}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className={Home.crosslogo}>
           <span onClick={signInPopUphandler}>&#10060;</span>
         </div>
@@ -185,11 +239,23 @@ function HomePage() {
         </div>
         <div className={Home.username_field}>
           <label htmlFor="username-L">Username</label>
-          <input id="username-L" type="text" onChange={(e) => setUserDetails({...userDetails, username: e.target.value})} />
+          <input
+            id="username-L"
+            type="text"
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, username: e.target.value })
+            }
+          />
         </div>
         <div className={Home.password_field}>
           <label htmlFor="password-L">Password</label>
-          <input id="password-L" type={showPassword ? "text" : "password"} onChange={(e) => setUserDetails({...userDetails, password: e.target.value})} />
+          <input
+            id="password-L"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, password: e.target.value })
+            }
+          />
         </div>
         <div className={Home.show_hide_password}>
           <input id="checkbox" type="checkbox" onClick={HandleShowPassword} />

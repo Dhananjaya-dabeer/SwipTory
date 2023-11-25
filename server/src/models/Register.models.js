@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
             username: {
                 type: String,
                 required: true,
-                unique: true
             },
             password:{
                 type: String,
@@ -32,7 +31,7 @@ userSchema.pre("save", async function (next) {
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn:  process.env.ACCESS_TOKEN_EXPIRY 
         }
        
         )

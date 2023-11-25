@@ -8,6 +8,7 @@ const router = Router()
 router.route("/health").get(health)
 router.route("/register").post(register)
 router.route("/signin").post(signin)
+router.route("/tokenverify").get(verifyToken)
 
 
 
