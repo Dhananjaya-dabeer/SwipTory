@@ -1,0 +1,44 @@
+.close-button{
+    cursor: pointer;
+   
+}
+.slide_button{
+    cursor: pointer;
+}
+
+.active{
+    border: 2px solid blue;
+}
+.allslidebtns .extraslideshandle  {
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    cursor: pointer;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 9px;
+}
+
+ .cross-mark .extraslideshandle{
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    cursor: pointer;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 9px;
+}
+.extraslideshandle div p{
+    text-align: center;
+    width: 4vw;
+    height: 2vh;
+}
+
+.extraslideshandle div span{
+    width: 2vw;
+    height: 0.3vh;
+}
+.disable_btn{
+    opacity: 0.5;
+    cursor: not-allowed;
+}

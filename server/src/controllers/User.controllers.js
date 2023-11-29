@@ -14,7 +14,7 @@ export { health }
 const register = asyncHandler(async (req, res) => {
     const { username, password } = req.body
     if (!(username && password)) return res.json({ status: "provide username and password" })
-    const dupkeyVerification = registerModel.findOne({username})
+    const dupkeyVerification = await registerModel.findOne({username})
 if(dupkeyVerification){
     res.json({
         status: "Username is alredy used please try to use different!"
@@ -24,8 +24,9 @@ if(dupkeyVerification){
     const accessToken = newUser.generateAccessToken()
     res.status(200).json({
         message: "Success",
-        status: "successfully registered please... login",
-        token: accessToken
+        status: "successfully registered and Loggedin!",
+        token: accessToken,
+        username: newUser.username
     })
 })
 
@@ -37,11 +38,11 @@ const signin = asyncHandler(async (req, res) => {
     const { username, password } = req.body
     if (!(username && password)) return res.json({ message: "provide username and password" })
     const existingUser = await registerModel.findOne({ username })
-    const accessToken = existingUser.generateAccessToken()
+    const accessToken = existingUser && existingUser.generateAccessToken() // got null error when i use different name in signin without registering so **existingUser && required**
     if (!existingUser) {
         res.json({
             status: "Not Found",
-            message: "You are not registered with us"
+            message: "You are not registered with us Please.. Register"
         })
 
     }

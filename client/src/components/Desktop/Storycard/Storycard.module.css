@@ -1,0 +1,42 @@
+.storyDetails{
+    display: flex;
+    justify-content: center;
+    
+}
+
+
+.storyDetails  div{
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30vw;
+    
+}
+
+.storyDetails div div{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+/* .heading {
+    display: flex;
+    justify-content: space-around;
+}
+.description{
+    display: flex;
+    justify-content: space-around;
+}
+
+.image{
+    display: flex;
+    justify-content: space-around;
+}
+
+.category{
+    display: flex;
+    justify-content: space-around;
+} */

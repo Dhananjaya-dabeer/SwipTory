@@ -88,6 +88,7 @@ function HomePage() {
     try {
       window.alert(register.data.status);
       setItemLocalStorage("token", register.data.token);
+      setItemLocalStorage("username", register.data.username)
       if (register.data.token) navigate("/signin");
     } catch (error) {
       console.log(error);

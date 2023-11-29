@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from "react";
 import signin from "./Signin.module.css";
+import "./Signin.css";
 import { useState } from "react";
 import axios from "axios";
-
+import uniqueid from 'uniqid'
 import { useNavigate } from "react-router-dom";
 import {
   clearLocalStorage,
   getItemLocalStorage,
   setItemLocalStorage,
 } from "../../../../server/src/utils/ExportUtils";
+import Addstorycard from "./Storycard/Addstorycard";
 
 function signinPage() {
   let ALL_IMG =
@@ -27,9 +29,35 @@ function signinPage() {
   let hamburger =
     "https://icon-library.com/images/hamburger-menu-icon-svg/hamburger-menu-icon-svg-13.jpg";
 
+    const mapSlideDetailsObject = ( isActive=false, heading = '', description='', image='', category='') => {
+      return {
+        heading,
+        description,
+        image,
+        category,
+        isActive,
+        id : uniqueid()
+      }
+    }
+
   const navigate = useNavigate();
   const [addStoryPopup, setAddstoryPopuo] = useState(false);
   const [hamburgerPopUp, setHamburgerPopUp] = useState(false);
+  const [slideDetails, setSlideDetails] = useState([]);
+
+
+  useEffect(() => {
+    if(!slideDetails.length){
+      const initialState = []
+      for(let ind = 0 ; ind < 3 ; ind++){
+        initialState.push(
+          mapSlideDetailsObject(ind === 0)
+        )
+      }
+      setSlideDetails(initialState)
+    }
+  }, [])
+
   useEffect(() => {
     (async () => {
       try {
@@ -52,24 +80,88 @@ function signinPage() {
   }, [navigate]);
 
   const addStoryPopupHandler = () => {
-    setAddstoryPopuo(true);
+    setAddstoryPopuo(!addStoryPopup);
   };
 
   const bookmarkPopupHandler = () => {};
 
   const hamburgurHandler = () => {
-    setHamburgerPopUp(true);
+    setHamburgerPopUp(!hamburgerPopUp);
   };
 
   const logoutHandler = () => {
-    navigate("/")
-    clearLocalStorage()
+    navigate("/");
+    clearLocalStorage();
+  };
+
+  const addSlideHandler = () => {
+
+    if(slideDetails.length < 6){
+      setSlideDetails((prevState) => [...prevState, mapSlideDetailsObject()])
+    } else {
+      alert("Maximum 6 slides are allowed");
+    }
+  };
+
+  const removeSlideHandler = (id) => {
+
+    setSlideDetails(
+      [...slideDetails].filter(slide => slide.id !== id)
+    )
+
+  };
+
+  const handleNext = () => {
+   const targetIndex = slideDetails.findIndex(slide => slide.isActive);
+   setSlideDetails(
+    [...slideDetails].map((slide, index) => {
+        if(index === targetIndex){
+          slide.isActive = false
+        }
+
+        if(index === targetIndex + 1){
+          slide.isActive = true
+        }
+
+        return slide
+    })
+   )
+  };
+
+  const handlePrevious = () => {
+    const targetIndex = slideDetails.findIndex(slide => slide.isActive);
+   setSlideDetails(
+    [...slideDetails].map((slide, index) => {
+        if(index === targetIndex){
+          slide.isActive = false
+        }
+
+        if(index === targetIndex - 1){
+          slide.isActive = true
+        }
+
+        return slide
+    })
+   )
+  };
+
+  const PostHandler = async() => {
+    const filteredSlideDetails = slideDetails.map(({isActive,id, ...rest}) => rest )
+    console.log(filteredSlideDetails)
+   let postResponse = await axios.post("http://localhost:7000/api/v2/posts/", filteredSlideDetails )
+   try {
+    console.log(postResponse.data.status)
+   } catch (error) {
+    
+   }
   }
 
   return (
     <div
       className={addStoryPopup ? signin.blurBack : signin.parent}
-      onClick={() => {}}
+      onClick={() => {
+        setAddstoryPopuo(false);
+      }}
     >
       <div className={signin.navbar}>
         <div className={signin.title}>
@@ -101,7 +193,9 @@ function signinPage() {
       </div>
 
       <div
-        className={hamburgerPopUp ? signin.hamburgerpopupdiv : signin.displaynone}
+        className={
+          hamburgerPopUp ? signin.hamburgerpopupdiv : signin.displaynone
+        }
       >
         <div className={signin.username}>{getItemLocalStorage("username")}</div>
         <div className={signin.logout_btn}>
@@ -162,8 +256,76 @@ function signinPage() {
           </div>
         </div>
       </div>
-      <div className={addStoryPopup ? signin.addstory : signin.displaynone}>
-        div.
+      <div
+        className={addStoryPopup ? signin.addstory : signin.displaynone}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={signin.story_btn_flex}>
+          {slideDetails.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`${signin}.slide ${
+                index < 3 ? "allslidebtns" : "cross-mark"
+              }`}
+            >
+              { (
+                <div className={`extraslideshandle ${slide.isActive ? "active" : ""} ` }>
+                  {index >= 3 && (
+                    <span
+                      className="close-button"
+                      onClick={() => removeSlideHandler(slide.id)}
+                    >
+                      &#10060;
+                    </span>
+                  )}
+                  <div
+                    className="slide_button"
+                    onClick={() => {
+                      setSlideDetails(
+                        [...slideDetails].map(detail => {
+                          if(detail.id === slide.id){
+                            detail.isActive = true;
+                          }else{
+                            detail.isActive = false;
+                          }
+                          return detail
+                        })
+                      )
+
+                    }}
+                  >
+                    <p>{`Slide${index + 1}`}</p>
+                  </div>
+                </div>
+              ) }
+            </div>
+          ))}
+          <div className={signin.addslide}>
+            <div className={signin.add_slide_button} onClick={addSlideHandler}>
+              <p>Add +</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          {
+            slideDetails.map(detail => {
+              return detail.isActive && <Addstorycard slideDetails={slideDetails} setSlideDetails={setSlideDetails} detail={detail} />
+            })
+          }
+        </div>
+        <div className={signin.prev_next_post_btn}>
+          <div>
+          <div className={signin.prev_btn}>
+            <button  disabled={slideDetails.findIndex(slide => slide.isActive) === 0 } className={slideDetails.findIndex(slide => slide.isActive) === 0 ? "disable_btn" : ""} onClick={handlePrevious}>Previous</button>
+          </div>
+          <div className={signin.next_btn}>
+            <button disabled={slideDetails.findIndex(slide => slide.isActive) === slideDetails.length - 1} className={slideDetails.findIndex(slide => slide.isActive) === slideDetails.length - 1 ? "disable_btn" : ""}onClick={handleNext} >Next</button>
+          </div>
+          </div>
+          <div className={signin.post_btn}>
+            <button onClick={PostHandler} >Post</button>
+          </div>
+        </div>
       </div>
     </div>
   );

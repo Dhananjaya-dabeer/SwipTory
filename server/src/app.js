@@ -10,8 +10,8 @@ app.use(express.urlencoded({extended: true, limit : '16kb'}))
 
 // routes import
 import routerHealth from './routes/Register.routes.js'
-
+import routerPost from './routes/Posts.routes.js'
 // rute declaration
 app.use("/api/v1/users", routerHealth)
-
+app.use("/api/v2/posts", routerPost)
 export default app
