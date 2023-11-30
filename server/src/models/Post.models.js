@@ -18,8 +18,10 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     postCreatedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+        
     }
 },{timestamps: true})
 

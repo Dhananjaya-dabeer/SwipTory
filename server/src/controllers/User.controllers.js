@@ -26,7 +26,8 @@ if(dupkeyVerification){
         message: "Success",
         status: "successfully registered and Loggedin!",
         token: accessToken,
-        username: newUser.username
+        username: newUser.username,
+        id: newUser._id
     })
 })
 
@@ -48,7 +49,7 @@ const signin = asyncHandler(async (req, res) => {
     }
     else if (await existingUser.isPasswordCorrect(password)) {
 
-        res.status(200).json({ status: "success", message: `Logged In successfully! welcome ${existingUser.username}`, token: accessToken, username: existingUser.username })
+        res.status(200).json({ status: "success", message: `Logged In successfully! welcome ${existingUser.username}`, token: accessToken, username: existingUser.username, id: existingUser._id })
     }
     else {
         res.json({

@@ -3,7 +3,7 @@ import signin from "./Signin.module.css";
 import "./Signin.css";
 import { useState } from "react";
 import axios from "axios";
-import uniqueid from 'uniqid'
+import uniqueid from "uniqid";
 import { useNavigate } from "react-router-dom";
 import {
   clearLocalStorage,
@@ -29,34 +29,103 @@ function signinPage() {
   let hamburger =
     "https://icon-library.com/images/hamburger-menu-icon-svg/hamburger-menu-icon-svg-13.jpg";
 
-    const mapSlideDetailsObject = ( isActive=false, heading = '', description='', image='', category='') => {
-      return {
-        heading,
-        description,
-        image,
-        category,
-        isActive,
-        id : uniqueid()
-      }
-    }
+  const mapSlideDetailsObject = (
+    isActive = false,
+    heading = "",
+    description = "",
+    image = "",
+    category = ""
+  ) => {
+    return {
+      heading,
+      description,
+      image,
+      category,
+      isActive,
+      id: uniqueid(),
+      postCreatedBy: getItemLocalStorage("id"),
+    };
+  };
 
   const navigate = useNavigate();
   const [addStoryPopup, setAddstoryPopuo] = useState(false);
   const [hamburgerPopUp, setHamburgerPopUp] = useState(false);
   const [slideDetails, setSlideDetails] = useState([]);
-
+  const [foodArray, setFoodArray] = useState([]);
+  const [travelArray, setTravelArray] = useState([]);
+  const [educationArray, setEducatonArray] = useState([]);
+  const [healthAndfitnessArray, setHealthAndfitnessArray] = useState([]);
+  const [movieArray, setMovieArray] = useState([]);
+  const [selectedImageDetails,setSelectedImageDetails] = useState(null)
 
   useEffect(() => {
-    if(!slideDetails.length){
-      const initialState = []
-      for(let ind = 0 ; ind < 3 ; ind++){
-        initialState.push(
-          mapSlideDetailsObject(ind === 0)
-        )
+    if (!slideDetails.length) {
+      const initialState = [];
+      for (let ind = 0; ind < 3; ind++) {
+        initialState.push(mapSlideDetailsObject(ind === 0));
       }
-      setSlideDetails(initialState)
+      setSlideDetails(initialState);
     }
-  }, [])
+  }, [slideDetails]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let postDetails = await axios.get(
+          "http://localhost:7000/api/v2/posts/postdetails"
+        );
+  
+        postDetails.data.posts.forEach((item) => {
+          if (item.category === "food") {
+            setFoodArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "health and fitness") {
+            setHealthAndfitnessArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "travel") {
+            setTravelArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "movies") {
+            setMovieArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "education") {
+            setEducatonArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [slideDetails]);
 
   useEffect(() => {
     (async () => {
@@ -95,70 +164,130 @@ function signinPage() {
   };
 
   const addSlideHandler = () => {
-
-    if(slideDetails.length < 6){
-      setSlideDetails((prevState) => [...prevState, mapSlideDetailsObject()])
+    if (slideDetails.length < 6) {
+      setSlideDetails((prevState) => [...prevState, mapSlideDetailsObject()]);
     } else {
       alert("Maximum 6 slides are allowed");
     }
   };
 
   const removeSlideHandler = (id) => {
-
-    setSlideDetails(
-      [...slideDetails].filter(slide => slide.id !== id)
-    )
-
+    setSlideDetails([...slideDetails].filter((slide) => slide.id !== id));
   };
 
   const handleNext = () => {
-   const targetIndex = slideDetails.findIndex(slide => slide.isActive);
-   setSlideDetails(
-    [...slideDetails].map((slide, index) => {
-        if(index === targetIndex){
-          slide.isActive = false
+    const targetIndex = slideDetails.findIndex((slide) => slide.isActive);
+    setSlideDetails(
+      [...slideDetails].map((slide, index) => {
+        if (index === targetIndex) {
+          slide.isActive = false;
         }
 
-        if(index === targetIndex + 1){
-          slide.isActive = true
+        if (index === targetIndex + 1) {
+          slide.isActive = true;
         }
 
-        return slide
-    })
-   )
+        return slide;
+      })
+    );
   };
 
   const handlePrevious = () => {
-    const targetIndex = slideDetails.findIndex(slide => slide.isActive);
-   setSlideDetails(
-    [...slideDetails].map((slide, index) => {
-        if(index === targetIndex){
-          slide.isActive = false
+    const targetIndex = slideDetails.findIndex((slide) => slide.isActive);
+    setSlideDetails(
+      [...slideDetails].map((slide, index) => {
+        if (index === targetIndex) {
+          slide.isActive = false;
         }
 
-        if(index === targetIndex - 1){
-          slide.isActive = true
+        if (index === targetIndex - 1) {
+          slide.isActive = true;
         }
 
-        return slide
-    })
-   )
+        return slide;
+      })
+    );
   };
 
-  const PostHandler = async() => {
-    const filteredSlideDetails = slideDetails.map(({isActive,id, ...rest}) => rest )
-    console.log(filteredSlideDetails)
-   let postResponse = await axios.post("http://localhost:7000/api/v2/posts/", filteredSlideDetails )
-   try {
-    console.log(postResponse.data.status)
-   } catch (error) {
-    
-   }
-  }
+  const PostHandler = async () => {
+    const filteredSlideDetails = slideDetails.map(
+      ({ isActive, id, ...rest }) => rest
+    );
+    // const hasEmptyValue = filteredSlideDetails.every(obj =>
+    //   Object.values(obj).every(value => value !== ''))
+    //   if(!hasEmptyValue) alert("All Fields are Mandetory")
+    let postResponse = await axios.post(
+      "http://localhost:7000/api/v2/posts/",
+      filteredSlideDetails
+    );
+    try {
+      alert(postResponse.data.status);
+    } catch (error) {
+      console.log(error);
+    }
+    (async () => {
+      try {
+        let postDetails = await axios.get(
+          "http://localhost:7000/api/v2/posts/postdetails"
+        );
+  
+        postDetails.data.posts.forEach((item) => {
+          if (item.category === "food") {
+            setFoodArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "health and fitness") {
+            setHealthAndfitnessArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "travel") {
+            setTravelArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "movies") {
+            setMovieArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+  
+          if (item.category === "education") {
+            setEducatonArray((prev) => {
+              if (!prev.some((existingItem) => existingItem._id === item._id)) {
+                return [...prev, item];
+              }
+              return prev;
+            });
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
 
+  
+ 
   return (
     <div
-      className={addStoryPopup ? signin.blurBack : signin.parent}
+      className={addStoryPopup || selectedImageDetails ? signin.blurBack : signin.parent}
       onClick={() => {
         setAddstoryPopuo(false);
       }}
@@ -236,23 +365,88 @@ function signinPage() {
         <div className={signin.storyContainer}>
           <div className={signin.foodstry}>
             <h2>Top Stories About food</h2>
-            <h3>No stories Available</h3>
+            <div>
+              {foodArray.length ? (
+                foodArray.map((food) => {
+                  return (
+                    <div className={signin.foodstryimgdiv} key={food._id} onClick={ () => setSelectedImageDetails(food)} >
+                      {" "}
+                      <img src={food.image} alt=""  />{" "}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No stories Available</h3>
+              )}
+            </div>
           </div>
           <div className={signin.healthstry}>
             <h2>Top Stories About Medical</h2>
-            <h3>No stories Available</h3>
+            <div>
+              {healthAndfitnessArray.length ? (
+                healthAndfitnessArray.map((health) => {
+                  return (
+                    <div className={signin.foodstryimgdiv} key={health._id}>
+                      {" "}
+                      <img src={health.image} alt="" />{" "}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No stories Available</h3>
+              )}
+            </div>
           </div>
           <div className={signin.travelstry}>
             <h2>Top Stories About Travel</h2>
-            <h3>No stories Available</h3>
+            <div>
+              {travelArray.length ? (
+                travelArray.map((travel) => {
+                  return (
+                    <div className={signin.foodstryimgdiv} key={travel._id}>
+                      {" "}
+                      <img src={travel.image} alt="" />{" "}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No stories Available</h3>
+              )}
+            </div>
           </div>
           <div className={signin.moviestry}>
             <h2>Top Stories About Movies</h2>
-            <h3>No stories Available</h3>
+            <div>
+              {movieArray.length ? (
+                movieArray.map((movie) => {
+                  return (
+                    <div className={signin.foodstryimgdiv} key={movie._id}>
+                      {" "}
+                      <img src={movie.image} alt="" />{" "}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No stories Available</h3>
+              )}
+            </div>
           </div>
           <div className={signin.educationstry}>
             <h2>Top Stories About Education</h2>
-            <h3>No stories Available</h3>
+            <div>
+              {educationArray.length ? (
+                educationArray.map((education) => {
+                  return (
+                    <div className={signin.foodstryimgdiv} key={education._id}>
+                      {" "}
+                      <img src={education.image} alt="" />{" "}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No stories Available</h3>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -268,8 +462,12 @@ function signinPage() {
                 index < 3 ? "allslidebtns" : "cross-mark"
               }`}
             >
-              { (
-                <div className={`extraslideshandle ${slide.isActive ? "active" : ""} ` }>
+              {
+                <div
+                  className={`extraslideshandle ${
+                    slide.isActive ? "active" : ""
+                  } `}
+                >
                   {index >= 3 && (
                     <span
                       className="close-button"
@@ -282,22 +480,21 @@ function signinPage() {
                     className="slide_button"
                     onClick={() => {
                       setSlideDetails(
-                        [...slideDetails].map(detail => {
-                          if(detail.id === slide.id){
+                        [...slideDetails].map((detail) => {
+                          if (detail.id === slide.id) {
                             detail.isActive = true;
-                          }else{
+                          } else {
                             detail.isActive = false;
                           }
-                          return detail
+                          return detail;
                         })
-                      )
-
+                      );
                     }}
                   >
                     <p>{`Slide${index + 1}`}</p>
                   </div>
                 </div>
-              ) }
+              }
             </div>
           ))}
           <div className={signin.addslide}>
@@ -307,26 +504,69 @@ function signinPage() {
           </div>
         </div>
         <div>
-          {
-            slideDetails.map(detail => {
-              return detail.isActive && <Addstorycard slideDetails={slideDetails} setSlideDetails={setSlideDetails} detail={detail} />
-            })
-          }
+          {slideDetails.map((detail) => {
+            return (
+              detail.isActive && (
+                <Addstorycard
+                  slideDetails={slideDetails}
+                  setSlideDetails={setSlideDetails}
+                  detail={detail}
+                />
+              )
+            );
+          })}
         </div>
         <div className={signin.prev_next_post_btn}>
           <div>
-          <div className={signin.prev_btn}>
-            <button  disabled={slideDetails.findIndex(slide => slide.isActive) === 0 } className={slideDetails.findIndex(slide => slide.isActive) === 0 ? "disable_btn" : ""} onClick={handlePrevious}>Previous</button>
-          </div>
-          <div className={signin.next_btn}>
-            <button disabled={slideDetails.findIndex(slide => slide.isActive) === slideDetails.length - 1} className={slideDetails.findIndex(slide => slide.isActive) === slideDetails.length - 1 ? "disable_btn" : ""}onClick={handleNext} >Next</button>
-          </div>
+            <div className={signin.prev_btn}>
+              <button
+                disabled={
+                  slideDetails.findIndex((slide) => slide.isActive) === 0
+                }
+                className={
+                  slideDetails.findIndex((slide) => slide.isActive) === 0
+                    ? "disable_btn"
+                    : ""
+                }
+                onClick={handlePrevious}
+              >
+                Previous
+              </button>
+            </div>
+            <div className={signin.next_btn}>
+              <button
+                disabled={
+                  slideDetails.findIndex((slide) => slide.isActive) ===
+                  slideDetails.length - 1
+                }
+                className={
+                  slideDetails.findIndex((slide) => slide.isActive) ===
+                  slideDetails.length - 1
+                    ? "disable_btn"
+                    : ""
+                }
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            </div>
           </div>
           <div className={signin.post_btn}>
-            <button onClick={PostHandler} >Post</button>
+            <button onClick={PostHandler}>Post</button>
           </div>
         </div>
       </div>
+      {selectedImageDetails && (
+        <div className={signin.imageDetailsModal}>
+          <div className={signin.imageDetailsContent}>
+            <img src={selectedImageDetails.image} alt="" />
+            <h2>{selectedImageDetails.heading}</h2>
+            <p>{selectedImageDetails.description}</p>
+            
+            <button onClick={() =>  setSelectedImageDetails(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

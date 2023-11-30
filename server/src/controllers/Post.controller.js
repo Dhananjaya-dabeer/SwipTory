@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { postModel } from "../models/Post.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -6,9 +7,9 @@ const createPost = asyncHandler(
         const postDetails = req.body;
         console.log(postDetails)
         for (const post of postDetails) {
-            const { heading, description, image, category } = post
-            if (!heading || !description || !image || !category) {
-                return res.json({ code: 400, status: "All fields are mandatory" })
+            const { heading, description, image, category, postCreatedBy} = post
+            if (!heading || !description || !image || !category ) {
+                return res.json({ code: 400, status: "All fields are mandatory with atleast 3 Slides" })
             };
         }
 
@@ -32,7 +33,10 @@ const createPost = asyncHandler(
     })
 
 
-    
-
-
 export {createPost}
+
+const postDetails = asyncHandler( async(req, res) => {
+    const postsInfo = await postModel.find()
+    res.json({ posts: postsInfo})
+}) 
+export {postDetails}

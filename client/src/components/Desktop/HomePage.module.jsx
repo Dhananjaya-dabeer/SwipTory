@@ -89,6 +89,7 @@ function HomePage() {
       window.alert(register.data.status);
       setItemLocalStorage("token", register.data.token);
       setItemLocalStorage("username", register.data.username)
+      setItemLocalStorage("id", register.data.id)
       if (register.data.token) navigate("/signin");
     } catch (error) {
       console.log(error);
@@ -105,6 +106,7 @@ function HomePage() {
       if (signin.data.status == "success") {
         setItemLocalStorage("token", signin.data.token);
         setItemLocalStorage("username", signin.data.username)
+        setItemLocalStorage("id", signin.data.id)
         if (signin.data.token) navigate("/signin");
       }
     } catch (error) {

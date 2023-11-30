@@ -116,6 +116,7 @@
     .storyContainer{
         display: flex;
         flex-direction: column;
+        margin-top: 3%;
     }
     
     .storyContainer h2{
@@ -123,6 +124,8 @@
     }
     .storyContainer h3{
         color: #8E8E8E;
+        text-align: center;
+       
     }
     
     .storyContainer div{
@@ -226,4 +229,78 @@
     .prev_next_post_btn .post_btn button{
         background-color: #FF7373;
         color: white;
+    }
+    .foodstryimgdiv{
+        margin-left: 2%;
+    }
+
+    .foodstry  img{
+        width: 10vw;
+        height: 32vh;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .healthstry  img{
+        width: 10vw;
+        height: 32vh;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .travelstry  img{
+        width: 10vw;
+        height: 32vh;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .moviestry  img{
+        width: 10vw;
+        height: 32vh;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .educationstry  img{
+        width: 10vw;
+        height: 32vh;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+     .foodstry div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    } 
+    .healthstry div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    } 
+    .travelstry div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    } 
+    .moviestry div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    } 
+    .educationstry div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    } 
+   
+    .foodstryimgdiv{
+        display: flex;
+    } 
+
+    .imageDetailsModal{
+        position: absolute;
+        top: 20%;
+        left: 30%;
+        background-color: white;
+    }
+    .imageDetailsModal img{
+        width: 50vh;
+        height: 70vh;
     }
