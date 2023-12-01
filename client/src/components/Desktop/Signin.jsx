@@ -11,6 +11,8 @@ import {
   setItemLocalStorage,
 } from "../../../../server/src/utils/ExportUtils";
 import Addstorycard from "./Storycard/Addstorycard";
+import Stories from "react-insta-stories"
+
 
 function signinPage() {
   let ALL_IMG =
@@ -52,11 +54,18 @@ function signinPage() {
   const [hamburgerPopUp, setHamburgerPopUp] = useState(false);
   const [slideDetails, setSlideDetails] = useState([]);
   const [foodArray, setFoodArray] = useState([]);
+  const [foodImgArray, setFoodImgArray] = useState([]);
   const [travelArray, setTravelArray] = useState([]);
   const [educationArray, setEducatonArray] = useState([]);
   const [healthAndfitnessArray, setHealthAndfitnessArray] = useState([]);
   const [movieArray, setMovieArray] = useState([]);
   const [selectedImageDetails,setSelectedImageDetails] = useState(null)
+  const [mainArrary,setMainArray] = useState([])
+
+  const arrayIndex = []
+
+ 
+
 
   useEffect(() => {
     if (!slideDetails.length) {
@@ -74,7 +83,8 @@ function signinPage() {
         let postDetails = await axios.get(
           "http://localhost:7000/api/v2/posts/postdetails"
         );
-  
+        
+         setMainArray(postDetails.data.posts)
         postDetails.data.posts.forEach((item) => {
           if (item.category === "food") {
             setFoodArray((prev) => {
@@ -283,8 +293,52 @@ function signinPage() {
     })();
   };
 
+  for(let i = 0; i < mainArrary.length; i++ ){
+    if(i%3 === 0 ){
+      arrayIndex.push(i)
+    }
+  }
+  const generateStories = (dataArray, startIndex) => {
+    const stories = dataArray.map((item) => {
+      const { image, heading, description } = item;
+  
+      return {
+        url: image,
+        header: {
+          heading: heading,
+          subheading: description,
+        },
+      };
+    });
+    
+    const visibleStories = stories.slice(startIndex, startIndex + 3);
+    return visibleStories;
+  };
+
+  const [storyIndex, setStoryIndex] = useState(0);
+  const [visibleFoodArray, setVisibleFoodArray] = useState(generateStories(foodArray,0));
+  const [visibleHealthArray, setVisibleHealthArray] = useState(generateStories(healthAndfitnessArray,0));
+  const [visibleTravelArray, setVisibleTravelArray] = useState(generateStories(travelArray,0));
+  const [visibleMoviesArray, setVisibleMoviesArray] = useState(generateStories(movieArray,0));
+  const [visibleEducationArray, setVisibleEducationArray] = useState(generateStories(educationArray,0));
+  useEffect(() => {
+    setVisibleFoodArray(generateStories(foodArray,storyIndex))
+  },[foodArray,storyIndex])
+  useEffect(() => {
+    setVisibleHealthArray(generateStories(healthAndfitnessArray,storyIndex))
+  },[healthAndfitnessArray,storyIndex])
+  useEffect(() => {
+    setVisibleTravelArray(generateStories(travelArray,storyIndex))
+  },[travelArray])
+  useEffect(() => {
+    setVisibleMoviesArray(generateStories(movieArray,storyIndex))
+  },[movieArray])
+  useEffect(() => {
+    setVisibleHealthArray(generateStories(healthAndfitnessArray,storyIndex))
+  },[healthAndfitnessArray])
   
  
+  
   return (
     <div
       className={addStoryPopup || selectedImageDetails ? signin.blurBack : signin.parent}
@@ -367,12 +421,12 @@ function signinPage() {
             <h2>Top Stories About food</h2>
             <div>
               {foodArray.length ? (
-                foodArray.map((food) => {
+                foodArray.map((food,index) => {
                   return (
-                    <div className={signin.foodstryimgdiv} key={food._id} onClick={ () => setSelectedImageDetails(food)} >
+                  arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={food._id} onClick={ () => { setSelectedImageDetails(food);setStoryIndex(index)}} >
                       {" "}
                       <img src={food.image} alt=""  />{" "}
-                    </div>
+                    </div>)
                   );
                 })
               ) : (
@@ -384,12 +438,12 @@ function signinPage() {
             <h2>Top Stories About Medical</h2>
             <div>
               {healthAndfitnessArray.length ? (
-                healthAndfitnessArray.map((health) => {
+                healthAndfitnessArray.map((health,index) => {
                   return (
-                    <div className={signin.foodstryimgdiv} key={health._id}>
+                    arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={health._id} onClick={ () => {setSelectedImageDetails(health); setStoryIndex(index)}}>
                       {" "}
                       <img src={health.image} alt="" />{" "}
-                    </div>
+                    </div>)
                   );
                 })
               ) : (
@@ -401,12 +455,12 @@ function signinPage() {
             <h2>Top Stories About Travel</h2>
             <div>
               {travelArray.length ? (
-                travelArray.map((travel) => {
+                travelArray.map((travel,index) => {
                   return (
-                    <div className={signin.foodstryimgdiv} key={travel._id}>
+                  arrayIndex.includes(index) && ( <div className={signin.foodstryimgdiv} key={travel._id} onClick={() => {setSelectedImageDetails(travel); setStoryIndex(index)}}>
                       {" "}
                       <img src={travel.image} alt="" />{" "}
-                    </div>
+                    </div>)
                   );
                 })
               ) : (
@@ -418,12 +472,12 @@ function signinPage() {
             <h2>Top Stories About Movies</h2>
             <div>
               {movieArray.length ? (
-                movieArray.map((movie) => {
+                movieArray.map((movie,index) => {
                   return (
-                    <div className={signin.foodstryimgdiv} key={movie._id}>
+                   arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={movie._id} onClick={() => {setSelectedImageDetails(movie); setStoryIndex(index)}}>
                       {" "}
                       <img src={movie.image} alt="" />{" "}
-                    </div>
+                    </div>)
                   );
                 })
               ) : (
@@ -435,12 +489,12 @@ function signinPage() {
             <h2>Top Stories About Education</h2>
             <div>
               {educationArray.length ? (
-                educationArray.map((education) => {
+                educationArray.map((education,index) => {
                   return (
-                    <div className={signin.foodstryimgdiv} key={education._id}>
+                   arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={education._id} onClick={() => {setSelectedImageDetails(education);setStoryIndex(index)}}>
                       {" "}
                       <img src={education.image} alt="" />{" "}
-                    </div>
+                    </div>)
                   );
                 })
               ) : (
@@ -557,13 +611,18 @@ function signinPage() {
         </div>
       </div>
       {selectedImageDetails && (
+       
         <div className={signin.imageDetailsModal}>
           <div className={signin.imageDetailsContent}>
-            <img src={selectedImageDetails.image} alt="" />
-            <h2>{selectedImageDetails.heading}</h2>
-            <p>{selectedImageDetails.description}</p>
+
+          <button onClick={() =>  setSelectedImageDetails(null)}>&#120;</button>
+
+           {selectedImageDetails.category === "food" && <Stories stories={visibleFoodArray} loop = {true}/>} 
+           {selectedImageDetails.category === "health and fitness" && <Stories stories={visibleHealthArray} loop = {true}/> }
+            {selectedImageDetails.category === "travel" && <Stories stories={visibleTravelArray} loop = {true}/>}
+            {selectedImageDetails.category === "movies" && <Stories stories={visibleMoviesArray} loop = {true}/>}
+            {selectedImageDetails.category === "education" && <Stories stories={visibleEducationArray} loop = {true}/>}
             
-            <button onClick={() =>  setSelectedImageDetails(null)}>Close</button>
           </div>
         </div>
       )}

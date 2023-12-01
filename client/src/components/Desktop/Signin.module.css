@@ -132,7 +132,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around ;
-        height: 35vh;
+        height: 50vh;
         text-align: center;
     }
     
@@ -237,32 +237,33 @@
     .foodstry  img{
         width: 10vw;
         height: 32vh;
-        opacity: 0.8;
         cursor: pointer;
+        border-radius: 19px;
+
     }
     .healthstry  img{
         width: 10vw;
         height: 32vh;
-        opacity: 0.8;
         cursor: pointer;
+        border-radius: 19px;
     }
     .travelstry  img{
         width: 10vw;
         height: 32vh;
-        opacity: 0.8;
         cursor: pointer;
+        border-radius: 19px;
     }
     .moviestry  img{
         width: 10vw;
         height: 32vh;
-        opacity: 0.8;
         cursor: pointer;
+        border-radius: 19px;
     }
     .educationstry  img{
         width: 10vw;
         height: 32vh;
-        opacity: 0.8;
         cursor: pointer;
+        border-radius: 19px;
     }
      .foodstry div{
         display: flex;
@@ -296,11 +297,20 @@
 
     .imageDetailsModal{
         position: absolute;
-        top: 20%;
-        left: 30%;
-        background-color: white;
+        top: 5%;
+        left: 40%;
+        
     }
     .imageDetailsModal img{
         width: 50vh;
         height: 70vh;
+    }
+    .imageDetailsContent button{
+        width: 10vh;
+        
+    }
+    .imageDetailsContent{
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
     }
