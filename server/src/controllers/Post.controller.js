@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const createPost = asyncHandler(
     async (req, res) => {
         const postDetails = req.body;
-        console.log(postDetails)
+        
         for (const post of postDetails) {
             const { heading, description, image, category, postCreatedBy} = post
             if (!heading || !description || !image || !category ) {
@@ -37,6 +37,40 @@ export {createPost}
 
 const postDetails = asyncHandler( async(req, res) => {
     const postsInfo = await postModel.find()
+    let filter = req.body 
+    
+    if(filter.category === "Food"){
+      
+        let filteredResponse = postsInfo.filter((item) => item.category === "food" ) 
+        
+     return   res.json({
+            posts: filteredResponse
+       })
+    }
+    if(filter.category === "HealthAndFitness"){
+        let filteredResponse = postsInfo.filter((item) => item.category === "health and fitness" ) 
+        return   res.json({
+            posts: filteredResponse
+       })
+    }
+    if(filter.category === "travel"){
+        let filteredResponse = postsInfo.filter((item) => item.category === "travel" ) 
+        return   res.json({
+            posts: filteredResponse
+       })
+    }
+    if(filter.category === "movies"){
+        let filteredResponse = postsInfo.filter((item) => item.category === "movies" ) 
+        return   res.json({
+            posts: filteredResponse
+       })
+    }
+    if(filter.category === "education"){
+        let filteredResponse = postsInfo.filter((item) => item.category === "education" ) 
+        return   res.json({
+            posts: filteredResponse
+       })
+    }
     res.json({ posts: postsInfo})
 }) 
 export {postDetails}

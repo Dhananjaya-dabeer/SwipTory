@@ -5,4 +5,5 @@ const router = Router()
 
 router.route("/").post(createPost)
 router.route("/postdetails").get(postDetails)
+router.route("/postdetails").post(postDetails)
 export default router

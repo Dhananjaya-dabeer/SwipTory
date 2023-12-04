@@ -8,12 +8,10 @@ import { useNavigate } from "react-router-dom";
 import {
   clearLocalStorage,
   getItemLocalStorage,
-  setItemLocalStorage,
 } from "../../../../server/src/utils/ExportUtils";
 import Addstorycard from "./Storycard/Addstorycard";
-import Stories from "react-insta-stories"
-
-
+import Stories from "react-insta-stories";
+import heart from "../../assets/heart.png"
 function signinPage() {
   let ALL_IMG =
     "https://i0.wp.com/saveeartheducation.com/wp-content/uploads/2022/06/Untitled-design-2022-06-14T185213.555.png?resize=799%2C440&ssl=1";
@@ -59,13 +57,10 @@ function signinPage() {
   const [educationArray, setEducatonArray] = useState([]);
   const [healthAndfitnessArray, setHealthAndfitnessArray] = useState([]);
   const [movieArray, setMovieArray] = useState([]);
-  const [selectedImageDetails,setSelectedImageDetails] = useState(null)
-  const [mainArrary,setMainArray] = useState([])
+  const [selectedImageDetails, setSelectedImageDetails] = useState(null);
+  const [mainArrary, setMainArray] = useState([]);
 
-  const arrayIndex = []
-
- 
-
+  const arrayIndex = [];
 
   useEffect(() => {
     if (!slideDetails.length) {
@@ -83,8 +78,8 @@ function signinPage() {
         let postDetails = await axios.get(
           "http://localhost:7000/api/v2/posts/postdetails"
         );
-        
-         setMainArray(postDetails.data.posts)
+
+        setMainArray(postDetails.data.posts);
         postDetails.data.posts.forEach((item) => {
           if (item.category === "food") {
             setFoodArray((prev) => {
@@ -94,7 +89,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "health and fitness") {
             setHealthAndfitnessArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -103,7 +98,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "travel") {
             setTravelArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -112,7 +107,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "movies") {
             setMovieArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -121,7 +116,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "education") {
             setEducatonArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -240,7 +235,7 @@ function signinPage() {
         let postDetails = await axios.get(
           "http://localhost:7000/api/v2/posts/postdetails"
         );
-  
+
         postDetails.data.posts.forEach((item) => {
           if (item.category === "food") {
             setFoodArray((prev) => {
@@ -250,7 +245,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "health and fitness") {
             setHealthAndfitnessArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -259,7 +254,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "travel") {
             setTravelArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -268,7 +263,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "movies") {
             setMovieArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -277,7 +272,7 @@ function signinPage() {
               return prev;
             });
           }
-  
+
           if (item.category === "education") {
             setEducatonArray((prev) => {
               if (!prev.some((existingItem) => existingItem._id === item._id)) {
@@ -293,15 +288,15 @@ function signinPage() {
     })();
   };
 
-  for(let i = 0; i < mainArrary.length; i++ ){
-    if(i%3 === 0 ){
-      arrayIndex.push(i)
+  for (let i = 0; i < mainArrary.length; i++) {
+    if (i % 3 === 0) {
+      arrayIndex.push(i);
     }
   }
   const generateStories = (dataArray, startIndex) => {
     const stories = dataArray.map((item) => {
       const { image, heading, description } = item;
-  
+
       return {
         url: image,
         header: {
@@ -310,38 +305,134 @@ function signinPage() {
         },
       };
     });
-    
+
     const visibleStories = stories.slice(startIndex, startIndex + 3);
     return visibleStories;
   };
 
   const [storyIndex, setStoryIndex] = useState(0);
-  const [visibleFoodArray, setVisibleFoodArray] = useState(generateStories(foodArray,0));
-  const [visibleHealthArray, setVisibleHealthArray] = useState(generateStories(healthAndfitnessArray,0));
-  const [visibleTravelArray, setVisibleTravelArray] = useState(generateStories(travelArray,0));
-  const [visibleMoviesArray, setVisibleMoviesArray] = useState(generateStories(movieArray,0));
-  const [visibleEducationArray, setVisibleEducationArray] = useState(generateStories(educationArray,0));
+  const [visibleFoodArray, setVisibleFoodArray] = useState(
+    generateStories(foodArray, 0)
+  );
+  const [visibleHealthArray, setVisibleHealthArray] = useState(
+    generateStories(healthAndfitnessArray, 0)
+  );
+  const [visibleTravelArray, setVisibleTravelArray] = useState(
+    generateStories(travelArray, 0)
+  );
+  const [visibleMoviesArray, setVisibleMoviesArray] = useState(
+    generateStories(movieArray, 0)
+  );
+  const [visibleEducationArray, setVisibleEducationArray] = useState(
+    generateStories(educationArray, 0)
+  );
+  const [filteredArray, setFilteredArray] = useState([]); // backend Filtered Array
+  // const [visibleMainArray, setVisibleMainArray] = useState(generateStories(mainArrary,0))
   useEffect(() => {
-    setVisibleFoodArray(generateStories(foodArray,storyIndex))
-  },[foodArray,storyIndex])
+    setVisibleFoodArray(generateStories(foodArray, storyIndex));
+  }, [foodArray, storyIndex]);
   useEffect(() => {
-    setVisibleHealthArray(generateStories(healthAndfitnessArray,storyIndex))
-  },[healthAndfitnessArray,storyIndex])
+    setVisibleHealthArray(generateStories(healthAndfitnessArray, storyIndex));
+  }, [healthAndfitnessArray, storyIndex]);
   useEffect(() => {
-    setVisibleTravelArray(generateStories(travelArray,storyIndex))
-  },[travelArray])
+    setVisibleTravelArray(generateStories(travelArray, storyIndex));
+  }, [travelArray, storyIndex]);
   useEffect(() => {
-    setVisibleMoviesArray(generateStories(movieArray,storyIndex))
-  },[movieArray])
+    setVisibleMoviesArray(generateStories(movieArray, storyIndex));
+  }, [movieArray, storyIndex]);
   useEffect(() => {
-    setVisibleHealthArray(generateStories(healthAndfitnessArray,storyIndex))
-  },[healthAndfitnessArray])
-  
- 
-  
+    setVisibleEducationArray(generateStories(educationArray, storyIndex));
+  }, [healthAndfitnessArray, storyIndex]);
+  // useEffect(() => {
+  //  setVisibleMainArray(generateStories(mainArrary,storyIndex))
+  // },[mainArrary,storyIndex])
+
+  let foodCategory = {
+    category: "Food",
+  };
+
+  let healthAndFitness = {
+    category: "HealthAndFitness",
+  };
+  let travelCategory = {
+    category: "travel",
+  };
+  let movieCategory = {
+    category: "movies",
+  };
+  let educationCategory = {
+    category: "education",
+  };
+
+  const HandleFoodFilter = async () => {
+    let filter = await axios.post(
+      "http://localhost:7000/api/v2/posts/postdetails",
+      foodCategory
+    );
+    try {
+      let food = filter.data.posts;
+      setFilteredArray(food);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const HandleHealthAndFitnessFilter = async () => {
+    let filter = await axios.post(
+      "http://localhost:7000/api/v2/posts/postdetails",
+      healthAndFitness
+    );
+    try {
+      let health = filter.data.posts;
+      setFilteredArray(health);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleTravelFilter = async () => {
+    let filter = await axios.post(
+      "http://localhost:7000/api/v2/posts/postdetails",
+      travelCategory
+    );
+    try {
+      let travel = filter.data.posts;
+      setFilteredArray(travel);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleMovieFilter = async () => {
+    let filter = await axios.post(
+      "http://localhost:7000/api/v2/posts/postdetails",
+      movieCategory
+    );
+    try {
+      let movie = filter.data.posts;
+      setFilteredArray(movie);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleEducationFilter = async () => {
+    let filter = await axios.post(
+      "http://localhost:7000/api/v2/posts/postdetails",
+      educationCategory
+    );
+    try {
+      let education = filter.data.posts;
+      setFilteredArray(education);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(selectedImageDetails);
   return (
     <div
-      className={addStoryPopup || selectedImageDetails ? signin.blurBack : signin.parent}
+      className={
+        addStoryPopup || selectedImageDetails ? signin.blurBack : signin.parent
+      }
       onClick={() => {
         setAddstoryPopuo(false);
       }}
@@ -388,121 +479,348 @@ function signinPage() {
 
       <div className={signin.page}>
         <div className={signin.images}>
-          <div className={signin.all}>
+          <div className={signin.all} onClick={(e) => setFilteredArray([])}>
             <img src={ALL_IMG} alt="" />
             <h2>ALL</h2>
           </div>
-          <div className={signin.food}>
+          <div className={signin.food} onClick={HandleFoodFilter}>
             <img src={FOOD_IMG} alt="" />
             <h2> FOOD</h2>
           </div>
-          <div className={signin.health}>
+          <div className={signin.health} onClick={HandleHealthAndFitnessFilter}>
             <img src={healtAndFitness} alt="" />
             <h2>
               HEALTH&<br></br>FITNESS
             </h2>
           </div>
-          <div className={signin.travel}>
+          <div className={signin.travel} onClick={handleTravelFilter}>
             <img src={TRAVEL_IMG} alt="" />
             <h2>TRAVEL</h2>
           </div>
-          <div className={signin.movie}>
+          <div className={signin.movie} onClick={handleMovieFilter}>
             <img src={MOVIE_IMG} alt="" />
             <h2>MOVIE</h2>
           </div>
-          <div className={signin.education}>
+          <div className={signin.education} onClick={handleEducationFilter}>
             <img src={EDUCATION_IMG} alt="" />
             <h2>EDUCATION</h2>
           </div>
         </div>
+        {filteredArray[0]
+          ? filteredArray[0].category == "food" && (
+              <div className={signin.foodstry}>
+                <h2>Top Stories About food</h2>
+                <div>
+                  {foodArray.length ? (
+                    foodArray.map((food, index) => {
+                      return (
+                        arrayIndex.includes(index) && (
+                          <div
+                            className={signin.foodstryimgdiv}
+                            key={food._id}
+                            onClick={() => {
+                              setSelectedImageDetails(food);
+                              setStoryIndex(index);
+                            }}
+                          >
+                            {" "}
+                            <img src={food.image} alt="" />{" "}
+                          </div>
+                        )
+                      );
+                    })
+                  ) : (
+                    <h3>No stories Available</h3>
+                  )}
+                </div>
+              </div>
+            )
+          : ""}
+        {filteredArray[0]
+          ? filteredArray[0].category == "health and fitness" && (
+              <div className={signin.healthstry}>
+                <h2>Top Stories About Medical</h2>
+                <div>
+                  {healthAndfitnessArray.length ? (
+                    healthAndfitnessArray.map((health, index) => {
+                      return (
+                        arrayIndex.includes(index) && (
+                          <div
+                            className={signin.foodstryimgdiv}
+                            key={health._id}
+                            onClick={() => {
+                              setSelectedImageDetails(health);
+                              setStoryIndex(index);
+                            }}
+                          >
+                            {" "}
+                            <img src={health.image} alt="" />{" "}
+                          </div>
+                        )
+                      );
+                    })
+                  ) : (
+                    <h3>No stories Available</h3>
+                  )}
+                </div>
+              </div>
+            )
+          : ""}
+        {filteredArray[0]
+          ? filteredArray[0].category == "travel" && (
+              <div className={signin.travelstry}>
+                <h2>Top Stories About Travel</h2>
+                <div>
+                  {travelArray.length ? (
+                    travelArray.map((travel, index) => {
+                      return (
+                        arrayIndex.includes(index) && (
+                          <div
+                            className={signin.foodstryimgdiv}
+                            key={travel._id}
+                            onClick={() => {
+                              setSelectedImageDetails(travel);
+                              setStoryIndex(index);
+                            }}
+                          >
+                            {" "}
+                            <img src={travel.image} alt="" />{" "}
+                          </div>
+                        )
+                      );
+                    })
+                  ) : (
+                    <h3>No stories Available</h3>
+                  )}
+                </div>
+              </div>
+            )
+          : ""}
+        {filteredArray[0]
+          ? filteredArray[0].category == "movies" && (
+              <div className={signin.moviestry}>
+                <h2>Top Stories About Movies</h2>
+                <div>
+                  {movieArray.length ? (
+                    movieArray.map((movie, index) => {
+                      return (
+                        arrayIndex.includes(index) && (
+                          <div
+                            className={signin.foodstryimgdiv}
+                            key={movie._id}
+                            onClick={() => {
+                              setSelectedImageDetails(movie);
+                              setStoryIndex(index);
+                            }}
+                          >
+                            {" "}
+                            <img src={movie.image} alt="" />{" "}
+                          </div>
+                        )
+                      );
+                    })
+                  ) : (
+                    <h3>No stories Available</h3>
+                  )}
+                </div>
+              </div>
+            )
+          : ""}
+        {filteredArray[0]
+          ? filteredArray[0].category == "education" && (
+              <div className={signin.educationstry}>
+                <h2>Top Stories About Education</h2>
+                <div>
+                  {educationArray.length ? (
+                    educationArray.map((education, index) => {
+                      return (
+                        arrayIndex.includes(index) && (
+                          <div
+                            className={signin.foodstryimgdiv}
+                            key={education._id}
+                            onClick={() => {
+                              setSelectedImageDetails(education);
+                              setStoryIndex(index);
+                            }}
+                          >
+                            {" "}
+                            <img src={education.image} alt="" />{" "}
+                          </div>
+                        )
+                      );
+                    })
+                  ) : (
+                    <h3>No stories Available</h3>
+                  )}
+                </div>
+              </div>
+            )
+          : ""}
+        {!filteredArray.length ? (
+          <div className={signin.storyContainer}>
+            <div className={signin.foodstry}>
+              <h2>Your Stories</h2>
+              <div>
+                {mainArrary.length ? (
+                  mainArrary.map((AllStories, index) => {
+                    return (
+                      arrayIndex.includes(index) &&
+                      AllStories.postCreatedBy == getItemLocalStorage("id") && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={AllStories._id}
+                          onClick={() => {
+                            setSelectedImageDetails(AllStories);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={AllStories.image} alt=""  />{" "}
+                          
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
+            </div>
+            <div className={signin.foodstry}>
+              <h2>Top Stories About food</h2>
+              <div>
+                {foodArray.length ? (
+                  foodArray.map((food, index) => {
+                    return (
+                      arrayIndex.includes(index) && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={food._id}
+                          onClick={() => {
+                            setSelectedImageDetails(food);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={food.image} alt="" />{" "}
 
-        <div className={signin.storyContainer}>
-          <div className={signin.foodstry}>
-            <h2>Top Stories About food</h2>
-            <div>
-              {foodArray.length ? (
-                foodArray.map((food,index) => {
-                  return (
-                  arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={food._id} onClick={ () => { setSelectedImageDetails(food);setStoryIndex(index)}} >
-                      {" "}
-                      <img src={food.image} alt=""  />{" "}
-                    </div>)
-                  );
-                })
-              ) : (
-                <h3>No stories Available</h3>
-              )}
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
+            </div>
+            <div className={signin.healthstry}>
+              <h2>Top Stories About Medical</h2>
+              <div>
+                {healthAndfitnessArray.length ? (
+                  healthAndfitnessArray.map((health, index) => {
+                    return (
+                      arrayIndex.includes(index) && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={health._id}
+                          onClick={() => {
+                            setSelectedImageDetails(health);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={health.image} alt="" />{" "}
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
+            </div>
+            <div className={signin.travelstry}>
+              <h2>Top Stories About Travel</h2>
+              <div>
+                {travelArray.length ? (
+                  travelArray.map((travel, index) => {
+                    return (
+                      arrayIndex.includes(index) && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={travel._id}
+                          onClick={() => {
+                            setSelectedImageDetails(travel);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={travel.image} alt="" />{" "}
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
+            </div>
+            <div className={signin.moviestry}>
+              <h2>Top Stories About Movies</h2>
+              <div>
+                {movieArray.length ? (
+                  movieArray.map((movie, index) => {
+                    return (
+                      arrayIndex.includes(index) && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={movie._id}
+                          onClick={() => {
+                            setSelectedImageDetails(movie);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={movie.image} alt="" />{" "}
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
+            </div>
+            <div className={signin.educationstry}>
+              <h2>Top Stories About Education</h2>
+              <div>
+                {educationArray.length ? (
+                  educationArray.map((education, index) => {
+                    return (
+                      arrayIndex.includes(index) && (
+                        <div
+                          className={signin.foodstryimgdiv}
+                          key={education._id}
+                          onClick={() => {
+                            setSelectedImageDetails(education);
+                            setStoryIndex(index);
+                          }}
+                        >
+                          {" "}
+                          <img src={education.image} alt="" />{" "}
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <h3>No stories Available</h3>
+                )}
+              </div>
             </div>
           </div>
-          <div className={signin.healthstry}>
-            <h2>Top Stories About Medical</h2>
-            <div>
-              {healthAndfitnessArray.length ? (
-                healthAndfitnessArray.map((health,index) => {
-                  return (
-                    arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={health._id} onClick={ () => {setSelectedImageDetails(health); setStoryIndex(index)}}>
-                      {" "}
-                      <img src={health.image} alt="" />{" "}
-                    </div>)
-                  );
-                })
-              ) : (
-                <h3>No stories Available</h3>
-              )}
-            </div>
-          </div>
-          <div className={signin.travelstry}>
-            <h2>Top Stories About Travel</h2>
-            <div>
-              {travelArray.length ? (
-                travelArray.map((travel,index) => {
-                  return (
-                  arrayIndex.includes(index) && ( <div className={signin.foodstryimgdiv} key={travel._id} onClick={() => {setSelectedImageDetails(travel); setStoryIndex(index)}}>
-                      {" "}
-                      <img src={travel.image} alt="" />{" "}
-                    </div>)
-                  );
-                })
-              ) : (
-                <h3>No stories Available</h3>
-              )}
-            </div>
-          </div>
-          <div className={signin.moviestry}>
-            <h2>Top Stories About Movies</h2>
-            <div>
-              {movieArray.length ? (
-                movieArray.map((movie,index) => {
-                  return (
-                   arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={movie._id} onClick={() => {setSelectedImageDetails(movie); setStoryIndex(index)}}>
-                      {" "}
-                      <img src={movie.image} alt="" />{" "}
-                    </div>)
-                  );
-                })
-              ) : (
-                <h3>No stories Available</h3>
-              )}
-            </div>
-          </div>
-          <div className={signin.educationstry}>
-            <h2>Top Stories About Education</h2>
-            <div>
-              {educationArray.length ? (
-                educationArray.map((education,index) => {
-                  return (
-                   arrayIndex.includes(index) && (<div className={signin.foodstryimgdiv} key={education._id} onClick={() => {setSelectedImageDetails(education);setStoryIndex(index)}}>
-                      {" "}
-                      <img src={education.image} alt="" />{" "}
-                    </div>)
-                  );
-                })
-              ) : (
-                <h3>No stories Available</h3>
-              )}
-            </div>
-          </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
       <div
         className={addStoryPopup ? signin.addstory : signin.displaynone}
@@ -558,13 +876,14 @@ function signinPage() {
           </div>
         </div>
         <div>
-          {slideDetails.map((detail) => {
+          {slideDetails.map((detail, index) => {
             return (
               detail.isActive && (
                 <Addstorycard
                   slideDetails={slideDetails}
                   setSlideDetails={setSlideDetails}
                   detail={detail}
+                  key={index}
                 />
               )
             );
@@ -611,18 +930,28 @@ function signinPage() {
         </div>
       </div>
       {selectedImageDetails && (
-       
         <div className={signin.imageDetailsModal}>
           <div className={signin.imageDetailsContent}>
+            <button onClick={() => setSelectedImageDetails(null)}>
+              &#120;
+            </button>
 
-          <button onClick={() =>  setSelectedImageDetails(null)}>&#120;</button>
-
-           {selectedImageDetails.category === "food" && <Stories stories={visibleFoodArray} loop = {true}/>} 
-           {selectedImageDetails.category === "health and fitness" && <Stories stories={visibleHealthArray} loop = {true}/> }
-            {selectedImageDetails.category === "travel" && <Stories stories={visibleTravelArray} loop = {true}/>}
-            {selectedImageDetails.category === "movies" && <Stories stories={visibleMoviesArray} loop = {true}/>}
-            {selectedImageDetails.category === "education" && <Stories stories={visibleEducationArray} loop = {true}/>}
-            
+            {selectedImageDetails.category == "food" && (
+              <Stories stories={visibleFoodArray} loop={true} />
+            )}
+            {selectedImageDetails.category == "health and fitness" && (
+              <Stories stories={visibleHealthArray} loop={true} />
+            )}
+            {selectedImageDetails.category == "travel" && (
+              <Stories stories={visibleTravelArray} loop={true} />
+            )}
+            {selectedImageDetails.category == "movies" && (
+              <Stories stories={visibleMoviesArray} loop={true} />
+            )}
+            {selectedImageDetails.category == "education" && (
+              <Stories stories={visibleEducationArray} loop={true} />
+            )}
+            {/* {selectedImageDetails.postCreatedBy === getItemLocalStorage("id") && <Stories stories={visibleMainArray} loop = {true}/>} */}
           </div>
         </div>
       )}
